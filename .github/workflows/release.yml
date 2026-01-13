@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  MIX_ENV: prod
+
+jobs:
+  release:
+    name: Build and publish to Hex.pm
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: '1.17'
+        otp-version: '27'
+    
+    - name: Install dependencies
+      run: mix deps.get
+    
+    - name: Run tests
+      run: |
+        mix compile
+        mix test
+      env:
+        MIX_ENV: test
+    
+    - name: Build Hex package
+      run: mix hex.build
+    
+    - name: Publish to Hex.pm
+      run: mix hex.publish --yes
+      env:
+        HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
+    
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Release of diwa_schema
+          
+          View on Hex.pm: https://hex.pm/packages/diwa_schema
+          View docs: https://hexdocs.pm/diwa_schema
+        draft: false
+        prerelease: false
