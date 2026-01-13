@@ -2,7 +2,7 @@ defmodule DiwaSchema.Repo.Migrations.CreateEnterpriseV2Schema do
   use Ecto.Migration
 
   def change do
-    is_sqlite = repo().__adapter__ == Ecto.Adapters.SQLite3
+    is_sqlite = repo().__adapter__() == Ecto.Adapters.SQLite3
 
     unless is_sqlite do
       execute "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\""

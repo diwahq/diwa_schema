@@ -2,7 +2,7 @@ defmodule DiwaSchema.Repo.Migrations.AddVectorExtensionAndEmbeddings do
   use Ecto.Migration
 
   def up do
-    if repo().__adapter__ == Ecto.Adapters.Postgres do
+    if repo().__adapter__() == Ecto.Adapters.Postgres do
       execute "CREATE EXTENSION IF NOT EXISTS vector"
     end
   end

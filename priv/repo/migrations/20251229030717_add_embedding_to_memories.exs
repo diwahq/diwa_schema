@@ -3,7 +3,7 @@ defmodule DiwaSchema.Repo.Migrations.AddEmbeddingToMemories do
   @disable_ddl_transaction true
 
   def up do
-    is_sqlite = repo().__adapter__ == Ecto.Adapters.SQLite3
+    is_sqlite = repo().__adapter__() == Ecto.Adapters.SQLite3
 
     # Check if embedding column already exists (from previous migrations)
     if !column_exists?(:memories, :embedding, is_sqlite) do
@@ -40,7 +40,7 @@ defmodule DiwaSchema.Repo.Migrations.AddEmbeddingToMemories do
   end
 
   def down do
-    is_sqlite = repo().__adapter__ == Ecto.Adapters.SQLite3
+    is_sqlite = repo().__adapter__() == Ecto.Adapters.SQLite3
 
     if column_exists?(:memories, :embedding, is_sqlite) do
       unless is_sqlite do

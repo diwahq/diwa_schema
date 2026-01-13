@@ -8,7 +8,7 @@ defmodule DiwaSchema.Repo.Migrations.CreateConflictPerformance do
       
       # Store recent resolution history as JSONB array
       # Each entry: %{memory_a_id, memory_b_id, result, user_feedback, timestamp}
-      if repo().__adapter__ == Ecto.Adapters.SQLite3 do
+      if repo().__adapter__() == Ecto.Adapters.SQLite3 do
         add :resolutions, :text, default: "[]"
       else
         add :resolutions, :jsonb, default: "[]"
