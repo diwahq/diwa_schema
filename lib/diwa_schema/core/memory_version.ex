@@ -30,6 +30,7 @@ defmodule DiwaSchema.Core.MemoryVersion do
     field :actor, :string
     field :reason, :string
     field :parent_version_id, :binary_id
+    field :version_number, :integer
 
     belongs_to :memory, DiwaSchema.Core.Memory
 
@@ -46,8 +47,9 @@ defmodule DiwaSchema.Core.MemoryVersion do
       :operation,
       :actor,
       :reason,
-      :parent_version_id
+      :parent_version_id,
+      :version_number
     ])
-    |> validate_required([:memory_id, :content, :operation])
+    |> validate_required([:memory_id, :content, :operation, :version_number])
   end
 end
