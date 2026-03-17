@@ -48,7 +48,8 @@ defmodule DiwaSchema.Core.Memory do
     belongs_to(:context, DiwaSchema.Core.Context)
     belongs_to(:parent, DiwaSchema.Core.Memory)
     has_many(:children, DiwaSchema.Core.Memory, foreign_key: :parent_id)
-    field(:embedding, Application.compile_env(:diwa, :vector_type, :binary))
+    # Standardize to :binary for prod compilation to solve cycle
+    field(:embedding, :binary)
 
     timestamps()
   end

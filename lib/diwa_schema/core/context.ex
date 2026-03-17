@@ -22,6 +22,8 @@ defmodule DiwaSchema.Core.Context do
     field(:health_score, :integer, default: 100)
     field(:sync_origin, :string, default: "cloud")
     field(:remote_id, :binary_id)
+    field(:memory_count, :integer, virtual: true, default: 0)
+    field(:agent_count, :integer, virtual: true, default: 0)
 
     belongs_to(:organization, DiwaSchema.Enterprise.Organization)
     has_many(:memories, DiwaSchema.Core.Memory)
