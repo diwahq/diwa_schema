@@ -5,7 +5,8 @@ defmodule DiwaSchema.Enterprise.Organization do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   @timestamps_opts [type: :utc_datetime]
-  @derive {Jason.Encoder, only: [:id, :name, :slug, :custom_domain, :tier, :inserted_at, :updated_at]}
+  @derive {Jason.Encoder,
+           only: [:id, :name, :slug, :custom_domain, :tier, :inserted_at, :updated_at]}
   schema "organizations" do
     field(:name, :string)
     field(:slug, :string)
