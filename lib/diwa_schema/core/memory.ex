@@ -18,11 +18,13 @@ defmodule DiwaSchema.Core.Memory do
              :context_id,
              :parent_id,
              :deleted_at,
+             :organization_id,
              :inserted_at,
              :updated_at
            ]}
   schema "memories" do
     field(:content, :string)
+    field(:organization_id, :binary_id)
     field(:metadata, :map, default: %{})
     field(:actor, :string)
     field(:project, :string)
@@ -46,6 +48,7 @@ defmodule DiwaSchema.Core.Memory do
     field(:remote_id, :binary_id)
 
     belongs_to(:context, DiwaSchema.Core.Context)
+    belongs_to(:organization, DiwaSchema.Enterprise.Organization, define_field: false)
     belongs_to(:parent, DiwaSchema.Core.Memory)
     has_many(:children, DiwaSchema.Core.Memory, foreign_key: :parent_id)
     # Standardize to :binary for prod compilation to solve cycle
@@ -77,7 +80,8 @@ defmodule DiwaSchema.Core.Memory do
       :last_accessed_at,
       :expires_at,
       :sync_origin,
-      :remote_id
+      :remote_id,
+      :organization_id
     ])
     |> validate_required([:content, :context_id])
     |> foreign_key_constraint(:context_id, name: "memories_context_id_fkey")

@@ -9,15 +9,17 @@ defmodule DiwaSchema.Repo.Migrations.AddEmbeddingToMemories do
     if !column_exists?(:memories, :embedding, is_sqlite) do
       
       has_vector = 
-        if is_sqlite do
+        if is_sqlite or System.get_env("DIWA_VECTOR_DISABLED") == "true" do
           false
         else
-          # Try to create extension if needed
           try do
-             Ecto.Adapters.SQL.query(repo(), "CREATE EXTENSION IF NOT EXISTS vector")
-          rescue _ -> :ok end
-          
-          extension_exists?("vector")
+            case Ecto.Adapters.SQL.query(repo(), "SELECT '[]'::vector") do
+              {:ok, _} -> true
+              _ -> false
+            end
+          rescue
+            _ -> false
+          end
         end
 
       alter table(:memories) do

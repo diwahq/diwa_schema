@@ -2,8 +2,14 @@ defmodule DiwaSchema.Repo.Migrations.AddVectorExtensionAndEmbeddings do
   use Ecto.Migration
 
   def up do
-    if repo().__adapter__() == Ecto.Adapters.Postgres and System.get_env("DIWA_SKIP_PGVECTOR") != "true" do
-      execute "CREATE EXTENSION IF NOT EXISTS vector"
+    if repo().__adapter__() == Ecto.Adapters.Postgres and 
+       System.get_env("DIWA_SKIP_PGVECTOR") != "true" and 
+       System.get_env("DIWA_VECTOR_DISABLED") != "true" do
+      try do
+        execute "CREATE EXTENSION IF NOT EXISTS vector"
+      rescue
+        _ -> :ok
+      end
     end
   end
 
