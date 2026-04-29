@@ -120,13 +120,17 @@ defmodule DiwaSchema.Core.HandoffMessage do
     |> validate_kaban_pointer_consistency()
   end
 
-  # AC-D5: presence of kaban_doc_id implies presence of kaban_doc_version
+  # Q8: Pointer-population atomicity (all-three-or-zero invariant)
   defp validate_kaban_pointer_consistency(changeset) do
     doc_id = get_field(changeset, :kaban_doc_id)
     doc_version = get_field(changeset, :kaban_doc_version)
+    doc_hash = get_field(changeset, :kaban_doc_hash)
     
-    if not is_nil(doc_id) and is_nil(doc_version) do
-      add_error(changeset, :kaban_doc_version, "must be present when kaban_doc_id is set")
+    has_any = not is_nil(doc_id) or not is_nil(doc_version) or not is_nil(doc_hash)
+    has_all = not is_nil(doc_id) and not is_nil(doc_version) and not is_nil(doc_hash)
+
+    if has_any and not has_all do
+      add_error(changeset, :kaban_doc_id, "all three kaban pointer fields must be provided together")
     else
       changeset
     end
