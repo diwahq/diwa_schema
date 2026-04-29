@@ -6,12 +6,13 @@ defmodule DiwaSchema.Enterprise.Organization do
   @foreign_key_type :binary_id
   @timestamps_opts [type: :utc_datetime]
   @derive {Jason.Encoder,
-           only: [:id, :name, :slug, :custom_domain, :tier, :inserted_at, :updated_at]}
+           only: [:id, :name, :slug, :custom_domain, :tier, :settings, :inserted_at, :updated_at]}
   schema "organizations" do
     field(:name, :string)
     field(:slug, :string)
     field(:custom_domain, :string)
     field(:tier, :string, default: "free")
+    field(:settings, :map, default: %{})
 
     has_many(:contexts, DiwaSchema.Core.Context)
 
@@ -20,7 +21,7 @@ defmodule DiwaSchema.Enterprise.Organization do
 
   def changeset(organization, attrs) do
     organization
-    |> cast(attrs, [:name, :slug, :custom_domain, :tier])
+    |> cast(attrs, [:name, :slug, :custom_domain, :tier, :settings])
     |> validate_required([:name, :slug])
     |> validate_format(:slug, ~r/^[a-z0-9-]+$/)
     |> unique_constraint(:slug)
