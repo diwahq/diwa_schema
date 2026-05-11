@@ -14,6 +14,7 @@ defmodule DiwaSchema.Team.HitlEscalation do
     field :conflict_id, :binary_id
 
     field :score, :float
+    field :organization_id, :binary_id
 
     belongs_to :context, DiwaSchema.Core.Context
     belongs_to :memory_a, DiwaSchema.Core.Memory
@@ -32,9 +33,10 @@ defmodule DiwaSchema.Team.HitlEscalation do
       :context_id,
       :memory_a_id,
       :memory_b_id,
-      :score
+      :score,
+      :organization_id
     ])
-    |> validate_required([:conflict_id, :context_id])
+    |> validate_required([:conflict_id, :context_id, :organization_id])
     |> validate_inclusion(:status, ["pending", "resolved", "rejected"])
   end
 end

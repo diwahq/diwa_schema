@@ -13,8 +13,8 @@ defmodule DiwaSchema.Repo.Migrations.AddEmbeddingToMemories do
           false
         else
           try do
-            case Ecto.Adapters.SQL.query(repo(), "SELECT '[]'::vector") do
-              {:ok, _} -> true
+            case Ecto.Adapters.SQL.query(repo(), "SELECT 1 FROM pg_type WHERE typname = 'vector'") do
+              {:ok, %{rows: [[1]]}} -> true
               _ -> false
             end
           rescue

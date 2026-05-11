@@ -5,10 +5,17 @@ defmodule DiwaSchema.Repo.Migrations.AddVectorExtensionAndEmbeddings do
     if repo().__adapter__() == Ecto.Adapters.Postgres and 
        System.get_env("DIWA_SKIP_PGVECTOR") != "true" and 
        System.get_env("DIWA_VECTOR_DISABLED") != "true" do
-      try do
+      # Even tighter check: avoid ANY query that might trigger extension loading if not present
+      # Query pg_available_extensions to see if the 'vector' control file is present
+      # This avoids a fatal error on CREATE EXTENSION if pgvector is not installed
+      has_extension_available =
+        case repo().query("SELECT 1 FROM pg_available_extensions WHERE name = 'vector'") do
+          {:ok, %{rows: [[1]]}} -> true
+          _ -> false
+        end
+
+      if has_extension_available do
         execute "CREATE EXTENSION IF NOT EXISTS vector"
-      rescue
-        _ -> :ok
       end
     end
   end
