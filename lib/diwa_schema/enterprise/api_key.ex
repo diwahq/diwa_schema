@@ -10,6 +10,7 @@ defmodule DiwaSchema.Enterprise.ApiKey do
     field :key_hash, :string
     field :key_prefix, :string
     field :status, :string, default: "active"
+    field :role, :string, default: "member"
     field :last_used_at, :utc_datetime_usec
     field :expires_at, :utc_datetime_usec
 
@@ -26,10 +27,12 @@ defmodule DiwaSchema.Enterprise.ApiKey do
       :key_prefix,
       :organization_id,
       :status,
+      :role,
       :last_used_at,
       :expires_at
     ])
     |> validate_required([:name, :key_hash, :key_prefix, :organization_id])
+    |> validate_inclusion(:role, ["admin", "member"])
     |> unique_constraint(:key_hash)
   end
 end
