@@ -32,7 +32,7 @@ defmodule DiwaSchema.Enterprise.ApiKey do
       :expires_at
     ])
     |> validate_required([:name, :key_hash, :key_prefix, :organization_id])
-    |> validate_inclusion(:role, ["admin", "member"])
+    |> validate_inclusion(:role, ["admin", "member", "dew-runner", "reviewer"])
     |> unique_constraint(:key_hash)
   end
 end
