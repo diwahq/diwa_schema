@@ -4,6 +4,7 @@ defmodule DiwaSchema.Enterprise.ApiKey do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
+  @derive {Inspect, except: [:key_hash]}
 
   schema "api_keys" do
     field :name, :string
